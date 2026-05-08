@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Calendar as CalendarIcon } from "lucide-react";
 
 export function FilterBar() {
   const [fromDate, setFromDate] = useState("2025-01-01");
@@ -15,11 +14,8 @@ export function FilterBar() {
             type="date"
             value={fromDate}
             onChange={(e) => setFromDate(e.target.value)}
-            className="w-full bg-white text-black py-1 px-3 pr-8 rounded text-sm cursor-pointer focus:outline-none"
+            className="w-full bg-white text-black py-1 px-3 rounded text-sm cursor-pointer focus:outline-none"
           />
-          <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none text-gray-400">
-            <CalendarIcon className="w-4 h-4" />
-          </div>
         </div>
       </div>
 
@@ -31,11 +27,8 @@ export function FilterBar() {
             type="date"
             value={toDate}
             onChange={(e) => setToDate(e.target.value)}
-            className="w-full bg-white text-black py-1 px-3 pr-8 rounded text-sm cursor-pointer focus:outline-none"
+            className="w-full bg-white text-black py-1 px-3 rounded text-sm cursor-pointer focus:outline-none"
           />
-          <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none text-gray-400">
-            <CalendarIcon className="w-4 h-4" />
-          </div>
         </div>
       </div>
 
