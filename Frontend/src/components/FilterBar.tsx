@@ -47,8 +47,10 @@ export function FilterBar() {
         <div className="relative flex-1">
           <select className="w-full bg-white text-black py-1 px-3 rounded text-sm appearance-none cursor-pointer">
             <option>All Companies</option>
-            <option>SLT-MOBITEL</option>
-            <option>Company B</option>
+            <option>LECO</option>
+            <option>NWS&DB</option>
+            <option>Pizza Hut</option>
+        
           </select>
           <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none text-gray-400">
             <div className="w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-t-[5px] border-t-black"></div>
