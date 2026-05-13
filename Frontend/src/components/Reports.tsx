@@ -9,11 +9,16 @@ import { saveAs } from 'file-saver';
 const API_BASE = '/api/myslt-business/dashboard';
 
 export function Reports() {
-  const { dateRange, selectedCompany } = useDashboardStore();
+  const store = useDashboardStore();
   const [selectedReport, setSelectedReport] = useState('Service Complaints');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [reportData, setReportData] = useState<any[]>([]);
+
+  const from = store?.from;
+  const to = store?.to;
+  const company = store?.company;
 
   const reportOptions = [
     'Service Complaints',
@@ -23,14 +28,41 @@ export function Reports() {
     'Service Modification'
   ];
 
+  const fetchReportData = async () => {
+    try {
+      setIsLoading(true);
+      
+      const fromDate = from ? new Date(from) : new Date();
+      const toDate = to ? new Date(to) : new Date();
+
+      const response = await axios.get(`${API_BASE}/reports`, {
+        params: {
+          from: fromDate.toISOString(),
+          to: toDate.toISOString(),
+          company: company || 'All Companies',
+          sub_module: selectedReport
+        }
+      });
+      setReportData(response.data.data || []);
+    } catch (error) {
+      console.error('Fetch report failed:', error);
+      alert('Failed to fetch report data');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const exportToExcel = async () => {
     try {
       setIsLoading(true);
+      const fromDate = from ? new Date(from) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+      const toDate = to ? new Date(to) : new Date();
+
       const response = await axios.get(`${API_BASE}/reports`, {
         params: {
-          from: dateRange.from.toISOString(),
-          to: dateRange.to.toISOString(),
-          company: selectedCompany,
+          from: fromDate.toISOString(),
+          to: toDate.toISOString(),
+          company: company || 'All Companies',
           sub_module: selectedReport
         }
       });
@@ -162,10 +194,43 @@ export function Reports() {
               <Download className="w-4 h-4" />
               {isLoading ? 'Exporting...' : 'Export Excel'}
             </button>
-            <button className="bg-blue-500 text-white text-xs font-bold py-1.5 px-6 rounded-full hover:bg-blue-600 transition-colors">
-              Submit
+            <button 
+              onClick={fetchReportData}
+              disabled={isLoading}
+              className="bg-blue-500 text-white text-xs font-bold py-1.5 px-6 rounded-full hover:bg-blue-600 transition-colors">
+              {isLoading ? 'Searching...' : 'Submit'}
             </button>
           </div>
+
+          {reportData.length > 0 && (
+            <div className="mt-6 flex-1 overflow-hidden flex flex-col">
+              <div className="overflow-x-auto border border-gray-200 rounded-lg">
+                <table className="min-w-full divide-y divide-gray-200 text-[10px]">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-2 py-1 text-left font-bold text-gray-500 uppercase">TS</th>
+                      <th className="px-2 py-1 text-left font-bold text-gray-500 uppercase">Company</th>
+                      <th className="px-2 py-1 text-left font-bold text-gray-500 uppercase">CR</th>
+                      <th className="px-2 py-1 text-left font-bold text-gray-500 uppercase">Service ID</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {reportData.slice(0, 5).map((row, i) => (
+                      <tr key={i} className="hover:bg-blue-50">
+                        <td className="px-2 py-1 whitespace-nowrap">{new Date(row.ts).toLocaleDateString()}</td>
+                        <td className="px-2 py-1 whitespace-nowrap">{row.company}</td>
+                        <td className="px-2 py-1 whitespace-nowrap">{row.cr}</td>
+                        <td className="px-2 py-1 whitespace-nowrap">{row.serviceId}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p className="text-[10px] text-gray-500 mt-2 italic text-center">
+                Showing top 5 results. Use Export to see all {reportData.length} records.
+              </p>
+            </div>
+          )}
         </div>
 
         {isCalendarOpen && (
