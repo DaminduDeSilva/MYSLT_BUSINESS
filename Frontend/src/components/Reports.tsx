@@ -87,7 +87,7 @@ export function Reports() {
         { header: 'Username', key: 'username', width: 20 },
       ];
 
-      data.forEach(item => {
+      data.forEach((item: any) => {
         worksheet.addRow({
           ...item,
           ts: new Date(item.ts).toLocaleString()
@@ -215,7 +215,7 @@ export function Reports() {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {reportData.slice(0, 5).map((row, i) => (
+                    {reportData.slice(0, 5).map((row: any, i: number) => (
                       <tr key={i} className="hover:bg-blue-50">
                         <td className="px-2 py-1 whitespace-nowrap">{new Date(row.ts).toLocaleDateString()}</td>
                         <td className="px-2 py-1 whitespace-nowrap">{row.company}</td>
