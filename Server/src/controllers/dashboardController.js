@@ -1,4 +1,17 @@
 import LogEntry from '../models/LogEntry.js';
+import { getServerMetrics } from '../services/snmpService.js';
+
+/**
+ * Get Server Health Metrics
+ */
+export const getServerHealth = async (req, res) => {
+  try {
+    const metrics = await getServerMetrics();
+    res.json({ success: true, data: metrics });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
 
 /**
  * Get Dashboard Stats (StatCards)
@@ -104,6 +117,63 @@ export const getLeaderboard = async (req, res) => {
 };
 
 /**
+ * Get Sub Module Usage (Pie Chart)
+ */
+export const getSubModuleUsage = async (req, res) => {
+  try {
+    const { from, to, company } = req.query;
+    const query = { ts: { $gte: new Date(from), $lte: new Date(to) } };
+    if (company && company !== 'All Companies') query['identity.company_name'] = company;
+
+    const data = await LogEntry.aggregate([
+      { $match: query },
+      { $group: { _id: "$action.sub_module", value: { $sum: 1 } } },
+      { $project: { name: "$_id", value: 1, _id: 0 } },
+      { $sort: { value: -1 } },
+      { $limit: 6 }
+    ]);
+
+    res.json({ success: true, data });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+/**
+ * Get Category Usage (Horizontal Bar Chart)
+ */
+export const getCategoryUsage = async (req, res) => {
+  try {
+    const { from, to, company } = req.query;
+    const query = { ts: { $gte: new Date(from), $lte: new Date(to) } };
+    if (company && company !== 'All Companies') query['identity.company_name'] = company;
+
+    const data = await LogEntry.aggregate([
+      { $match: query },
+      { $group: { _id: "$identity.category", value: { $sum: 1 } } },
+      { $project: { name: "$_id", value: 1, _id: 0 } },
+      { $sort: { value: -1 } }
+    ]);
+
+    res.json({ success: true, data });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+/**
+ * Get All Unique Companies
+ */
+export const getCompaniesList = async (req, res) => {
+  try {
+    const companies = await LogEntry.distinct('identity.company_name');
+    res.json({ success: true, data: companies });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+/**
  * Get Report Data
  */
 export const getReportData = async (req, res) => {
@@ -116,17 +186,17 @@ export const getReportData = async (req, res) => {
     if (company && company !== 'All Companies') query['identity.company_name'] = company;
 
     const logs = await LogEntry.find(query)
-      .limit(100)
+      .limit(1000)
       .sort({ ts: -1 });
 
     const data = logs.map(log => ({
-      cr: log.data_snapshot?.cr,
+      cr: log.data_snapshot?.cr || 'N/A',
       company: log.identity.company_name,
       category: log.identity.category,
-      serviceId: log.data_snapshot?.service_id,
-      accountNo: log.data_snapshot?.account_no,
-      am: log.identity.account_manager,
-      username: log.data_snapshot?.username,
+      serviceId: log.data_snapshot?.service_id || 'N/A',
+      accountNo: log.data_snapshot?.account_no || 'N/A',
+      am: log.identity.account_manager || 'N/A',
+      username: log.data_snapshot?.username || log.identity.user_email,
       ts: log.ts
     }));
 

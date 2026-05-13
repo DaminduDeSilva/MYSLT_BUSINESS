@@ -12,8 +12,21 @@ const companies = [
   { name: 'LECO', cat: 'GB', am: 'Kasun Sameera' },
   { name: 'NWS&DB', cat: 'GB', am: 'Nadun Thiwanka' },
   { name: 'Pizza Hut', cat: 'LB', am: 'Amal Perera' },
-  { name: 'KY Biz', cat: 'SME', am: 'Dilan Imesh' },
-  { name: 'Dialog', cat: 'LB', am: 'Saman Silva' }
+  { name: 'People\'s Bank', cat: 'GB', am: 'Saman Kumara' },
+  { name: 'Hela Clothing', cat: 'GB', am: 'Ishara Madushan' },
+  { name: 'MAS Holdings', cat: 'GB', am: 'Nuwan Perera' },
+  { name: 'Brandix', cat: 'GB', am: 'Suraj Jayawardena' },
+  { name: 'Sampath Bank', cat: 'GB', am: 'Dimuthu Silva' },
+  { name: 'Ceylon Tea Board', cat: 'LB', am: 'Rohan Wickramasinghe' },
+  { name: 'SLIC', cat: 'GB', am: 'Pathum Nissanka' },
+  { name: 'Bank of Ceylon', cat: 'GB', am: 'Kamal Gunaratne' },
+  { name: 'Commercial Bank', cat: 'GB', am: 'Tharindu Fernando' },
+  { name: 'Cargills PLC', cat: 'GB', am: 'Mahela Jayawardena' },
+  ...Array.from({ length: 87 }).map((_, i) => ({
+    name: `SME Corp ${i + 1}`,
+    cat: 'SME',
+    am: 'Dilan Imesh'
+  }))
 ];
 
 const modules = [
@@ -36,27 +49,32 @@ async function seed() {
     const logs = [];
     const now = new Date();
 
-    for (let i = 0; i < 100; i++) {
-      const company = companies[Math.floor(Math.random() * companies.length)];
+    for (let i = 0; i < 1000; i++) {
+      const isInternal = Math.random() > 0.8;
+      const company = isInternal 
+        ? { name: 'SLT-MOBITEL', cat: 'Internal', am: 'System Admin' }
+        : companies[Math.floor(Math.random() * companies.length)];
+        
       const moduleSet = modules[Math.floor(Math.random() * modules.length)];
       const subModule = moduleSet.sub[Math.floor(Math.random() * moduleSet.sub.length)];
       
       const ts = new Date(now.getTime() - Math.random() * 30 * 24 * 60 * 60 * 1000);
+      const emailDomain = company.name.toLowerCase().replace(/[^a-z]/g, '') + '.lk';
 
       logs.push({
         ts,
         identity: {
-          user_email: `user${i}@${company.name.toLowerCase().replace(/[^a-z]/g, '')}.lk`,
+          user_email: `user${i}@${emailDomain}`,
           company_name: company.name,
           category: company.cat,
           account_manager: company.am,
-          user_type: Math.random() > 0.2 ? 'external' : 'internal',
+          user_type: isInternal ? 'internal' : 'external',
           access_method: Math.random() > 0.3 ? 'Web' : 'Mobile'
         },
         action: {
           module: moduleSet.mod,
           sub_module: subModule,
-          status: Math.random() > 0.1 ? 'success' : 'failed',
+          status: Math.random() > 0.05 ? 'success' : 'failed',
           latency_ms: Math.floor(Math.random() * 500)
         },
         data_snapshot: {
@@ -69,7 +87,7 @@ async function seed() {
     }
 
     await LogEntry.insertMany(logs);
-    console.log('Successfully seeded 100 log entries');
+    console.log('Successfully seeded 1000 log entries with 100+ companies');
     process.exit(0);
   } catch (err) {
     console.error('Seeding failed:', err);

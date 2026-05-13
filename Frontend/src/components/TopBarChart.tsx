@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   BarChart,
   Bar,
@@ -9,56 +9,37 @@ import {
   Cell } from
 'recharts';
 import { useLocation } from 'react-router-dom';
+import axios from 'axios';
+import { useDashboardStore } from '../store/useDashboardStore';
+
 export function TopBarChart() {
   const location = useLocation();
   const path = location.pathname;
+  const { from, to, company } = useDashboardStore();
+  const [categoryData, setCategoryData] = useState<any[]>([]);
   
   // Hide chart on home page, only show on /view-more/* routes
   if (path === '/') {
     return null;
   }
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get('/api/myslt-business/dashboard/category-usage', {
+          params: { from, to, company }
+        });
+        if (response.data.success) {
+          setCategoryData(response.data.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch category usage:', error);
+      }
+    };
+    fetchCategories();
+  }, [from, to, company]);
   
-  const homeData = [
-  {
-    name: 'LB',
-    value: 1100
-  },
-  {
-    name: 'MB',
-    value: 950
-  },
-  {
-    name: 'GB',
-    value: 1150
-  },
-  {
-    name: 'SME',
-    value: 800
-  }];
-
-  const companiesData = [
-  {
-    name: 'Companies',
-    value: 1150
-  },
-  {
-    name: 'User Admin',
-    value: 1150
-  },
-  {
-    name: 'User',
-    value: 800
-  },
-  {
-    name: 'User IT',
-    value: 450
-  },
-  {
-    name: 'Billing',
-    value: 100
-  }];
-
-  const data = path === '/view-more/companies' ? companiesData : homeData;
+  const data = categoryData;
   return (
     <div className="bg-white rounded-xl border border-blue-200 p-4 shadow-sm h-48 w-full max-w-md">
       <ResponsiveContainer width="100%" height="100%">

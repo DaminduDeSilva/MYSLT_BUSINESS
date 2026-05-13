@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Home,
   Globe,
@@ -9,8 +9,32 @@ import {
 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Calendar } from './Calendar';
+
 export function Header() {
   const [showCalendar, setShowCalendar] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    });
+  };
+
+  const formatTime = (date: Date) => {
+    return date.toLocaleTimeString('en-GB', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    });
+  };
+
   return (
     <header className="flex items-center justify-between py-4 px-6 bg-white border-b border-blue-200 relative">
       <div className="flex items-center gap-3">
@@ -24,8 +48,8 @@ export function Header() {
 
       <div className="flex items-center gap-4 md:gap-6">
         <div className="hidden md:flex items-center gap-3 text-sm font-bold text-gray-800">
-          <span>05 Jun 2025</span>
-          <span>11:00</span>
+          <span>{formatDate(currentTime)}</span>
+          <span>{formatTime(currentTime)}</span>
         </div>
 
         <div className="flex items-center gap-2 text-blue-200">
