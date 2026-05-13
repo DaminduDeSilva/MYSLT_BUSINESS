@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
+import { useDashboardStore } from "../store/useDashboardStore";
 
 export function FilterBar() {
-  const [fromDate, setFromDate] = useState("2025-01-01");
-  const [toDate, setToDate] = useState("2025-06-05");
+  const { from, to, company, setFrom, setTo, setCompany } = useDashboardStore();
 
   return (
     <div className="bg-[#1e1e1e] text-white p-3 rounded-md mb-6 flex flex-wrap items-center gap-8 shadow-md">
@@ -12,8 +12,8 @@ export function FilterBar() {
         <div className="relative flex-1">
           <input
             type="date"
-            value={fromDate}
-            onChange={(e) => setFromDate(e.target.value)}
+            value={from}
+            onChange={(e) => setFrom(e.target.value)}
             className="w-full bg-white text-black py-1 px-3 rounded text-sm cursor-pointer focus:outline-none"
           />
         </div>
@@ -25,8 +25,8 @@ export function FilterBar() {
         <div className="relative flex-1">
           <input
             type="date"
-            value={toDate}
-            onChange={(e) => setToDate(e.target.value)}
+            value={to}
+            onChange={(e) => setTo(e.target.value)}
             className="w-full bg-white text-black py-1 px-3 rounded text-sm cursor-pointer focus:outline-none"
           />
         </div>
@@ -38,12 +38,17 @@ export function FilterBar() {
           Please select company name
         </span>
         <div className="relative flex-1">
-          <select className="w-full bg-white text-black py-1 px-3 rounded text-sm appearance-none cursor-pointer">
+          <select 
+            value={company}
+            onChange={(e) => setCompany(e.target.value)}
+            className="w-full bg-white text-black py-1 px-3 rounded text-sm appearance-none cursor-pointer"
+          >
             <option>All Companies</option>
             <option>LECO</option>
             <option>NWS&DB</option>
             <option>Pizza Hut</option>
-        
+            <option>KY Biz</option>
+            <option>Dialog</option>
           </select>
           <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none text-gray-400">
             <div className="w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-t-[5px] border-t-black"></div>

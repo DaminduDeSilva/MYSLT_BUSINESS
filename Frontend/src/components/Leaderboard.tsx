@@ -1,30 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useDashboardStore } from '../store/useDashboardStore';
+
 export function Leaderboard() {
-  const data = [
-  {
-    company: 'LECO',
-    user: 'user@leco.lk',
-    category: 'GB',
-    am: 'Kasun Sameera'
-  },
-  {
-    company: 'NWS&DB',
-    user: 'admin@nwsdb.lk',
-    category: 'GB',
-    am: 'Nadun Thiwanka'
-  },
-  {
-    company: 'Pizza Hut',
-    user: 'billing@pizzahut.lk',
-    category: 'LB',
-    am: 'Amal Perera'
-  },
-  {
-    company: 'KY Biz',
-    user: 'itmanager@kyb.com',
-    category: 'SME',
-    am: 'Dilan Imesh'
-  }];
+  const { from, to } = useDashboardStore();
+  const [data, setData] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchLeaderboard = async () => {
+      try {
+        const response = await axios.get('/api/myslt-business/dashboard/leaderboard', {
+          params: { from, to }
+        });
+        if (response.data.success) {
+          setData(response.data.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch leaderboard:', error);
+      }
+    };
+    fetchLeaderboard();
+  }, [from, to]);
 
   return (
     <div className="bg-white rounded-xl border border-blue-200 p-4 shadow-sm h-full">

@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useDashboardStore } from '../store/useDashboardStore';
 import {
   BarChart,
   Bar,
@@ -8,40 +10,26 @@ import {
   ResponsiveContainer,
   Cell } from
 'recharts';
+
 export function ModuleUsageChart() {
-  const data = [
-  {
-    name: 'Service Lineup',
-    value: 1100
-  },
-  {
-    name: 'Intelligent Solutions',
-    value: 950
-  },
-  {
-    name: 'Complaints',
-    value: 1200
-  },
-  {
-    name: 'Status Tracker',
-    value: 800
-  },
-  {
-    name: 'Billing',
-    value: 1100
-  },
-  {
-    name: 'Service Request',
-    value: 700
-  },
-  {
-    name: 'Messages',
-    value: 1000
-  },
-  {
-    name: 'Settings',
-    value: 1100
-  }];
+  const { from, to, company } = useDashboardStore();
+  const [data, setData] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('/api/myslt-business/dashboard/module-usage', {
+          params: { from, to, company }
+        });
+        if (response.data.success) {
+          setData(response.data.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch module usage:', error);
+      }
+    };
+    fetchData();
+  }, [from, to, company]);
 
   // Custom tick to split long labels into two lines
   const CustomizedAxisTick = (props: any) => {
