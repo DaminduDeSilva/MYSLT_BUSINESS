@@ -5,10 +5,6 @@ export function App() {
     <BrowserRouter basename="/myslt-business">
       <Routes>
         <Route path="/" element={<DashboardLayout />} />
-        <Route path="/view-more/companies" element={<DashboardLayout />} />
-        <Route path="/view-more/external-users" element={<DashboardLayout />} />
-        <Route path="/view-more/internal-users" element={<DashboardLayout />} />
       </Routes>
     </BrowserRouter>);
-
 }

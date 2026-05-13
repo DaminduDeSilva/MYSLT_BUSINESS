@@ -174,6 +174,25 @@ export const getCompaniesList = async (req, res) => {
 };
 
 /**
+ * Get Internal/External Users List
+ */
+export const getUsersList = (type) => async (req, res) => {
+  try {
+    const { from, to, company } = req.query;
+    const query = { 
+      ts: { $gte: new Date(from), $lte: new Date(to) },
+      "identity.user_type": type
+    };
+    if (company && company !== 'All Companies') query['identity.company_name'] = company;
+
+    const users = await LogEntry.distinct('identity.user_email', query);
+    res.json({ success: true, data: users.sort() });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+/**
  * Get Report Data
  */
 export const getReportData = async (req, res) => {

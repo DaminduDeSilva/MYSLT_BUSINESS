@@ -7,7 +7,8 @@ import {
   getLeaderboard, 
   getReportData,
   getCompaniesList,
-  getServerHealth
+  getServerHealth,
+  getUsersList
 } from '../controllers/dashboardController.js';
 import { verifyToken } from '../middleware/auth.js';
 
@@ -23,5 +24,9 @@ router.get('/category-usage', getCategoryUsage);
 router.get('/leaderboard', getLeaderboard);
 router.get('/reports', getReportData);
 router.get('/companies', getCompaniesList);
+router.get('/users/external', getUsersList('external'));
+router.get('/users/internal', getUsersList('internal'));
+
+export default router;
 
 export default router;
