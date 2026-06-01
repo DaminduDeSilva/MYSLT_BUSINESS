@@ -28,5 +28,3 @@ router.get('/users/external', getUsersList('external'));
 router.get('/users/internal', getUsersList('internal'));
 
 export default router;
-
-export default router;

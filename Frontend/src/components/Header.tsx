@@ -36,33 +36,47 @@ export function Header() {
   };
 
   return (
-    <header className="flex items-center justify-between py-4 px-6 bg-white border-b border-blue-200 relative">
-      <div className="flex items-center gap-3">
-        <h1 className="text-xl md:text-2xl font-bold text-[#1a2332]">
-          SLT-MOBITEL MyBusiness Dashboard
-        </h1>
-        <Link to="/" className="text-blue-500 hover:text-blue-700 p-1">
-          <Home className="w-6 h-6" />
-        </Link>
+    <header className="flex items-center justify-between py-4 px-6 bg-[#060b14] border-b border-gray-800 relative shadow-[0_4px_24px_rgba(0,0,0,0.4)]">
+      <div className="flex items-center gap-4">
+        {/* Logo Icon */}
+        <div className="flex gap-1 text-blue-500">
+          <svg width="24" height="32" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7 2 L2 16 L7 16 L12 2 Z" fill="#00A3FF" />
+            <path d="M14 2 L9 16 L14 16 L19 2 Z" fill="#00A3FF" opacity="0.7" />
+            <path d="M12 18 L7 32 L12 32 L17 18 Z" fill="#00A3FF" />
+          </svg>
+        </div>
+        
+        <div className="flex flex-col">
+          <h1 className="text-xl md:text-2xl font-bold text-white tracking-wide">
+            SLT-MOBITEL
+          </h1>
+          <span className="text-sm font-light text-gray-400">
+            MyBusiness Dashboard
+          </span>
+        </div>
       </div>
 
-      <div className="flex items-center gap-4 md:gap-6">
-        <div className="hidden md:flex items-center gap-3 text-sm font-bold text-gray-800">
+      <div className="flex items-center gap-6">
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-[#00A3FF] animate-pulse"></div>
+          <span className="text-sm text-gray-300">Live</span>
+        </div>
+
+        <div className="hidden md:flex flex-col text-sm text-gray-300 font-medium leading-tight">
           <span>{formatDate(currentTime)}</span>
           <span>{formatTime(currentTime)}</span>
         </div>
 
-        <div className="flex items-center gap-2 text-blue-200">
-          <Globe className="w-5 h-5 text-blue-400" />
-          <Smartphone className="w-5 h-5" />
-          <Monitor className="w-5 h-5" />
+        <div className="flex items-center gap-4 text-gray-400">
+          <Globe className="w-5 h-5 cursor-pointer hover:text-white transition-colors" />
+          <Monitor className="w-5 h-5 cursor-pointer hover:text-white transition-colors" />
         </div>
 
         <div className="relative">
           <button
             onClick={() => setShowCalendar(!showCalendar)}
-            className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
-            
+            className="p-2 border border-gray-700 bg-[#0d1424] text-gray-300 rounded hover:bg-gray-800 transition-colors">
             <CalendarIcon className="w-5 h-5" />
           </button>
 
