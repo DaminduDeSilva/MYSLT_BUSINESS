@@ -6,3 +6,8 @@
 @import 'tailwindcss/utilities';
 
 /* END TAILWIND IMPORTS — ALL OTHER CSS MUST GO BELOW THIS LINE */
+
+body {
+  background-color: #060b14;
+  color: #f8fafc;
+}

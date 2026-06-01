@@ -10,19 +10,20 @@ import { Reports } from "../components/Reports";
 
 export function DashboardLayout() {
   return (
-    <div className="min-h-screen bg-gray-50 font-sans">
+    <div className="min-h-screen bg-[#060b14] text-white font-sans">
       <Header />
 
-      <main className="p-4 md:p-6 max-w-7xl mx-auto">
+      <main className="p-4 md:p-6 max-w-[1400px] mx-auto space-y-6">
         <StatCards />
 
         <FilterBar />
 
-        <div className="mb-6">
+        {/* TopBarChart might be conditionally rendered on other routes */}
+        <div className="hidden">
           <TopBarChart />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <ModuleUsageChart />
           <SubModuleUsage />
         </div>

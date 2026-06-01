@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronDown, Search, Calendar as CalendarIcon, Download } from 'lucide-react';
+import { ChevronDown, Search, Calendar as CalendarIcon, Download, FileText } from 'lucide-react';
 import { Calendar } from './Calendar';
 import { useDashboardStore } from '../store/useDashboardStore';
 import axios from 'axios';
@@ -119,126 +119,125 @@ export function Reports() {
   ];
 
   return (
-    <div className="bg-white rounded-xl border border-blue-200 p-4 shadow-sm h-full flex flex-col">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-bold text-gray-800">Reports</h3>
+    <div className="bg-[#0b1320] border-t-2 border-t-[rgba(0,163,255,0.6)] border border-blue-900/40 p-5 rounded-lg shadow-sm h-full flex flex-col">
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="text-sm font-bold text-gray-300 tracking-widest">REPORTS</h3>
         <button
           onClick={() => setIsCalendarOpen(!isCalendarOpen)}
-          className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-          <CalendarIcon className="w-5 h-5" />
+          className="p-1.5 bg-[#002f6c] text-[#3b82f6] rounded hover:bg-[#004294] transition-colors border border-blue-900/50">
+          <FileText className="w-5 h-5" />
         </button>
       </div>
 
-      <div className="relative">
-        <div>
-          <div className="relative mb-4">
-            <button
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="w-full flex items-center justify-between border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-700 bg-white">
-              {selectedReport}
-              <ChevronDown className="w-4 h-4 text-gray-400" />
-            </button>
+      <div className="relative flex-1 flex flex-col">
+        <div className="relative mb-4">
+          <button
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className="w-full flex items-center justify-between border border-blue-900/50 rounded-md px-3 py-2 text-sm text-gray-300 bg-[#0d1424]">
+            {selectedReport}
+            <ChevronDown className="w-4 h-4 text-gray-400" />
+          </button>
 
-            {isDropdownOpen && (
-              <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-10">
-                {reportOptions.map((option, idx) => (
-                  <button
-                    key={idx}
-                    className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-blue-50"
-                    onClick={() => {
-                      setSelectedReport(option);
-                      setIsDropdownOpen(false);
-                    }}>
-                    {option}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div className="relative mb-6">
-            <input
-              type="text"
-              className="w-full border border-gray-300 rounded-md pl-3 pr-10 py-2 text-sm"
-              placeholder="Search..." />
-            <button className="absolute right-1 top-1 bottom-1 bg-blue-500 text-white rounded p-1.5 flex items-center justify-center hover:bg-blue-600">
-              <Search className="w-4 h-4" />
-            </button>
-          </div>
-
-          <div className="mb-2 text-xs font-semibold text-gray-600">Fields</div>
-
-          <div className="flex-1 flex gap-8">
-            {filterFields.map((column, colIdx) => (
-              <div key={colIdx} className="flex flex-col gap-2">
-                {column.map((field, fieldIdx) => (
-                  <label
-                    key={fieldIdx}
-                    className="flex items-center gap-2 text-xs text-gray-600 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      defaultChecked={true}
-                      className="rounded border-gray-300 text-blue-500 focus:ring-blue-500" />
-                    {field}
-                  </label>
-                ))}
-              </div>
-            ))}
-          </div>
-
-          <div className="flex justify-between items-center mt-4">
-            <button 
-              onClick={exportToExcel}
-              disabled={isLoading}
-              className="flex items-center gap-1 text-blue-600 hover:text-blue-700 text-xs font-semibold">
-              <Download className="w-4 h-4" />
-              {isLoading ? 'Exporting...' : 'Export Excel'}
-            </button>
-            <button 
-              onClick={fetchReportData}
-              disabled={isLoading}
-              className="bg-blue-500 text-white text-xs font-bold py-1.5 px-6 rounded-full hover:bg-blue-600 transition-colors">
-              {isLoading ? 'Searching...' : 'Submit'}
-            </button>
-          </div>
-
-          {reportData.length > 0 && (
-            <div className="mt-6 flex-1 overflow-hidden flex flex-col">
-              <div className="overflow-x-auto border border-gray-200 rounded-lg">
-                <table className="min-w-full divide-y divide-gray-200 text-[10px]">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-2 py-1 text-left font-bold text-gray-500 uppercase">TS</th>
-                      <th className="px-2 py-1 text-left font-bold text-gray-500 uppercase">Company</th>
-                      <th className="px-2 py-1 text-left font-bold text-gray-500 uppercase">CR</th>
-                      <th className="px-2 py-1 text-left font-bold text-gray-500 uppercase">Service ID</th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {reportData.slice(0, 5).map((row: any, i: number) => (
-                      <tr key={i} className="hover:bg-blue-50">
-                        <td className="px-2 py-1 whitespace-nowrap">{new Date(row.ts).toLocaleDateString()}</td>
-                        <td className="px-2 py-1 whitespace-nowrap">{row.company}</td>
-                        <td className="px-2 py-1 whitespace-nowrap">{row.cr}</td>
-                        <td className="px-2 py-1 whitespace-nowrap">{row.serviceId}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <p className="text-[10px] text-gray-500 mt-2 italic text-center">
-                Showing top 5 results. Use Export to see all {reportData.length} records.
-              </p>
+          {isDropdownOpen && (
+            <div className="absolute top-full left-0 right-0 mt-1 bg-[#0d1424] border border-blue-900/50 rounded-md shadow-lg z-10">
+              {reportOptions.map((option, idx) => (
+                <button
+                  key={idx}
+                  className="w-full text-left px-3 py-2 text-sm text-gray-300 hover:bg-gray-800"
+                  onClick={() => {
+                    setSelectedReport(option);
+                    setIsDropdownOpen(false);
+                  }}>
+                  {option}
+                </button>
+              ))}
             </div>
           )}
         </div>
 
+        <div className="relative mb-6">
+          <input
+            type="text"
+            className="w-full border border-blue-900/50 rounded-md pl-3 pr-10 py-2.5 text-sm bg-[#0d1424] text-white placeholder-gray-500 focus:outline-none focus:border-[#00A3FF]"
+            placeholder="Search..." />
+          <button className="absolute right-0 top-0 bottom-0 bg-[#00A3FF] text-white rounded-r-md px-3 flex items-center justify-center hover:bg-blue-500 transition-colors">
+            <Search className="w-5 h-5" />
+          </button>
+        </div>
+
+        <div className="mb-4 text-xs font-semibold text-gray-400 tracking-wider">FIELDS</div>
+
+        <div className="flex gap-12 mb-6">
+          {filterFields.map((column, colIdx) => (
+            <div key={colIdx} className="flex flex-col gap-3">
+              {column.map((field, fieldIdx) => (
+                <label
+                  key={fieldIdx}
+                  className="flex items-center gap-3 text-sm text-gray-300 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    defaultChecked={true}
+                    className="w-4 h-4 rounded border-gray-600 bg-[#1e293b] text-[#00A3FF] focus:ring-0 focus:ring-offset-0 cursor-pointer" />
+                  {field}
+                </label>
+              ))}
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-8 flex justify-between items-end flex-1">
+          <button 
+            onClick={exportToExcel}
+            disabled={isLoading}
+            className="flex items-center gap-2 text-[#00A3FF] hover:text-blue-400 text-sm font-medium transition-colors">
+            <Download className="w-4 h-4" />
+            {isLoading ? 'Exporting...' : 'Export Excel'}
+          </button>
+
+          <button 
+            onClick={fetchReportData}
+            disabled={isLoading}
+            className="bg-[#00A3FF] text-white text-sm font-semibold py-2 px-8 rounded hover:bg-blue-500 transition-colors">
+            {isLoading ? 'Searching...' : 'Submit'}
+          </button>
+        </div>
+
+        {reportData.length > 0 && (
+          <div className="mt-6 flex-1 overflow-hidden flex flex-col">
+            <div className="overflow-x-auto border border-blue-900/40 rounded-lg">
+              <table className="min-w-full divide-y divide-blue-900/30 text-[10px]">
+                <thead className="bg-[#061836]">
+                  <tr>
+                    <th className="px-2 py-1.5 text-left font-bold text-gray-400 uppercase">TS</th>
+                    <th className="px-2 py-1.5 text-left font-bold text-gray-400 uppercase">Company</th>
+                    <th className="px-2 py-1.5 text-left font-bold text-gray-400 uppercase">CR</th>
+                    <th className="px-2 py-1.5 text-left font-bold text-gray-400 uppercase">Service ID</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-[#0b1320] divide-y divide-blue-900/30">
+                  {reportData.slice(0, 5).map((row: any, i: number) => (
+                    <tr key={i} className="hover:bg-[#0d1829]">
+                      <td className="px-2 py-1.5 text-gray-300 whitespace-nowrap">{new Date(row.ts).toLocaleDateString()}</td>
+                      <td className="px-2 py-1.5 text-gray-300 whitespace-nowrap">{row.company}</td>
+                      <td className="px-2 py-1.5 text-gray-300 whitespace-nowrap">{row.cr}</td>
+                      <td className="px-2 py-1.5 text-gray-300 whitespace-nowrap">{row.serviceId}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="text-[10px] text-gray-500 mt-2 italic text-center">
+              Showing top 5 results. Use Export to see all {reportData.length} records.
+            </p>
+          </div>
+        )}
+
         {isCalendarOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="relative">
+          <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+            <div className="relative bg-[#0b1320] rounded-lg p-2 border border-blue-900/50 shadow-2xl">
               <button
                 onClick={() => setIsCalendarOpen(false)}
-                className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 z-10">
+                className="absolute top-4 right-4 text-gray-400 hover:text-white z-10 font-bold">
                 ✕
               </button>
               <Calendar />

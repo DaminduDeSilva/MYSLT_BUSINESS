@@ -73,26 +73,26 @@ export function StatCards() {
         {cards.map((card) => (
           <div
             key={card.id}
-            className="rounded-2xl border border-blue-200 p-5 flex flex-col justify-between bg-white transition-colors shadow-sm">
+            className="rounded-lg border-t-2 border-t-[#00A3FF] border-x border-b border-x-blue-900/40 border-b-blue-900/40 p-5 flex flex-col justify-between bg-[#0b1320] transition-colors shadow-sm">
             
-            <div className="flex items-center gap-4">
-              <div className={`p-2 rounded-lg bg-blue-50 ${card.iconColor}`}>
-                <card.icon className="w-8 h-8" />
+            <div className="flex items-center gap-5">
+              <div className={`w-14 h-14 rounded-full border border-blue-500/50 flex items-center justify-center bg-blue-500/10 ${card.iconColor}`}>
+                <card.icon className="w-6 h-6" />
               </div>
               <div>
-                <div className="text-2xl font-bold text-gray-900">
+                <div className="text-3xl font-bold text-white tracking-wide">
                   {card.value}
                 </div>
-                <div className="text-xs font-semibold text-gray-600">
+                <div className="text-sm text-gray-400 mt-1">
                   {card.title}
                 </div>
               </div>
             </div>
-            <div className="flex justify-end mt-2">
+            <div className="flex justify-end mt-4">
               <button
                 onClick={() => handleViewMore(card.id, card.title)}
-                className="text-[10px] text-blue-500 hover:text-blue-700 font-bold uppercase tracking-wider">
-                View More
+                className="text-xs font-semibold text-[#00A3FF] hover:text-blue-400 tracking-wider flex items-center">
+                VIEW MORE &gt;
               </button>
             </div>
           </div>
@@ -101,18 +101,18 @@ export function StatCards() {
 
       {modalData && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100] p-4">
-          <div className="bg-white rounded-2xl w-full max-w-md max-h-[80vh] flex flex-col shadow-2xl">
-            <div className="p-4 border-b flex items-center justify-between">
-              <h3 className="font-bold text-gray-800">{modalData.title}</h3>
-              <button onClick={() => setModalData(null)} className="p-1 hover:bg-gray-100 rounded-full">
+          <div className="bg-[#0b1320] border border-blue-900/50 rounded-2xl w-full max-w-md max-h-[80vh] flex flex-col shadow-2xl">
+            <div className="p-4 border-b border-gray-800 flex items-center justify-between">
+              <h3 className="font-bold text-white">{modalData.title}</h3>
+              <button onClick={() => setModalData(null)} className="p-1 hover:bg-gray-800 text-gray-400 rounded-full">
                 <X className="w-5 h-5" />
               </button>
             </div>
             <div className="p-4 overflow-y-auto flex-1">
               {modalData.list.length > 0 ? (
-                <ul className="divide-y divide-gray-100">
+                <ul className="divide-y divide-gray-800">
                   {modalData.list.map((item, i) => (
-                    <li key={i} className="py-2 text-sm text-gray-600 px-2 hover:bg-blue-50 rounded">
+                    <li key={i} className="py-2 text-sm text-gray-300 px-2 hover:bg-gray-800 rounded">
                       {item}
                     </li>
                   ))}
