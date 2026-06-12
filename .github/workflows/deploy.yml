@@ -11,28 +11,31 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '20'        
+        node-version: '20'
         cache: 'npm'
         cache-dependency-path: Frontend/package-lock.json
 
-    # ─── FRONTEND ───────────────────────────
+    #===============FRONTEND============== 
     - name: Install Frontend Dependencies
       working-directory: ./Frontend
       run: |
-        npm install --legacy-peer-deps    
+        npm install --legacy-peer-deps
+        npm install vite@^8.0.0 --save-dev --legacy-peer-deps
+        npm install @vitejs/plugin-react --save-dev --legacy-peer-deps
+        npm audit fix --force || true
 
     - name: Build Frontend
       working-directory: ./Frontend
       run: npm run build
 
-    # ─── BACKEND ────────────────────────────
+   #===============BACKEND==============
     - name: Install Backend Dependencies
       working-directory: ./Server
       run: |
-        npm install                       
+        npm install
         npm install nodemon --save-dev
 
-    # ─── DEPLOY TO SERVER ───────────────────
+    #============DEPLOY TO SERVER======
     - name: Deploy to Server
       env:
         DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
@@ -51,6 +54,8 @@ jobs:
           # Frontend
           cd Frontend
           npm install --legacy-peer-deps
+          npm install vite@^8.0.0 --save-dev --legacy-peer-deps
+          npm install @vitejs/plugin-react --save-dev --legacy-peer-deps
           npm run build
 
           # Backend
